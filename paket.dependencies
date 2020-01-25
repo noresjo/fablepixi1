@@ -2,6 +2,7 @@ source https://nuget.org/api/v2
 storage:none
 
 nuget Fable.Core
+nuget fable.pixi
 nuget Fable.Promise
 nuget Fable.Fetch
 nuget Fable.Browser.Dom
