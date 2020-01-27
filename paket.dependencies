@@ -5,6 +5,7 @@ nuget Fable.Core
 nuget Fable.Promise
 nuget Fable.Fetch
 nuget Fable.Browser.Dom
+nuget Fable.Browser.Svg
 nuget Thoth.Json
 
 

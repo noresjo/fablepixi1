@@ -2,5 +2,6 @@ Fable.Core
 Fable.Promise
 Fable.Fetch
 Fable.Browser.Dom
+Fable.Browser.Svg
 Thoth.Json
 File: Fable.Pixi.fs .

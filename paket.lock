@@ -13,6 +13,10 @@ NUGET
     Fable.Browser.Event (1.0) - restriction: >= netstandard2.0
       Fable.Core (>= 3.0) - restriction: >= netstandard2.0
       FSharp.Core (>= 4.5.2) - restriction: >= netstandard2.0
+    Fable.Browser.Svg (1.0.0-beta-001)
+      Fable.Browser.Dom (>= 1.0) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.6.2) - restriction: >= netstandard2.0
     Fable.Browser.WebStorage (1.0) - restriction: >= netstandard2.0
       Fable.Browser.Event (>= 1.0) - restriction: >= netstandard2.0
       Fable.Core (>= 3.0) - restriction: >= netstandard2.0
