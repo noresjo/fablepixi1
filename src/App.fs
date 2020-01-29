@@ -6,16 +6,19 @@ open PixiHal
 let app = createApplication
 document.body.appendChild app.view |> ignore
 
-let hex = 
-  let result = createFlatHexagonGraphics 30.
-  result.x <- 30.
-  result.y <- 30.
-  result
+let hexAt sx sy size = 
+  let result = createFlatHexagonGraphics size
+  result.x <- sx
+  result.y <- sy
+  app.stage.addChild result
   
-app.stage.addChild hex|> ignore
 
-let update(_) = 
-  hex.rotation <- hex.rotation + 0.01
-  None
+Hex.flatHexGrid 10 5 40
+|> List.map (fun (x,y) -> hexAt x y 40.)
+|> ignore
 
-app.ticker.add update |> ignore
+// let update(_) = 
+//   hex.rotation <- hex.rotation + 0.01
+//   None
+
+// app.ticker.add update |> ignore
