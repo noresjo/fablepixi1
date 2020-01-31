@@ -24,7 +24,7 @@ let createFlatHexagonGraphics size =
     .drawPolygon(Fable.Core.U3.Case2 castHex)
 
 let CreateLineSegmentHexGrid  =
-  let graphics = PIXI.Graphics.Create().lineStyle(color = (float)0xff, width = 4., alpha = 1.)
+  let graphics = PIXI.Graphics.Create().lineStyle(color = (float)0x664422, width = 2.0, alpha = 1.)
 
   let lines = 
     Hex.flatHexGridCoordinates 10 5 40

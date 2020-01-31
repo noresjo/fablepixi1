@@ -12,17 +12,19 @@ let hexAt sx sy size =
   result.y <- sy
   app.stage.addChild result
 
+let mouseoverHex = hexAt 0. 0. 40.
+
+mouseoverHex.visible <- false
+mouseoverHex.ca
 
 let gridGraphics = CreateLineSegmentHexGrid
   
 app.stage.addChild gridGraphics |>ignore
 
-// Hex.flatHexGrid 10 5 40
-// |> List.map (fun (x,y) -> hexAt x y 40.)
-// |> ignore
+gridGraphics.on "mousemove" 
 
-// let update(_) = 
-//   hex.rotation <- hex.rotation + 0.01
-//   None
+let update(_) = 
+  hex.rotation <- hex.rotation + 0.01
+  None
 
-// app.ticker.add update |> ignore
+app.ticker.add update |> ignore
