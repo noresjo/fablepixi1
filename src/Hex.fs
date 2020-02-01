@@ -10,7 +10,7 @@ type HexVector =
       HZ: int
     }
 
-let SCALE = 40.
+let SCALE = 10.
 let ORIGO =  { HX = 0; HY = 0; HZ =  0 }
 let UP = { HX = 0; HY = -1; HZ =  1 }
 let UP_RIGHT = { HX = 1; HY = 0; HZ =  1 }
@@ -69,8 +69,8 @@ let samePoint (x1,y1) (x2, y2) =
     (sameFloat x1 x2) && (sameFloat y1 y2)
 
 let SameLineSegment p1 p2 p3 p4 =
-    ((samePoint p1 p3) || (samePoint p1 p4)) &&
-    ((samePoint p3 p3) || (samePoint p3 p4))
+    ((samePoint p1 p3) || (samePoint p2 p3)) &&
+    ((samePoint p3 p3) || (samePoint p2 p4))
 
 let pointDifference ((x1:float),(y1:float)) (x2, y2) =
     (x1-x2,y1-y2)
@@ -116,11 +116,13 @@ let flatUnitHexagonLines size =
     |> List.map (fun index -> ((flatHexVertex (0.,0.) size index), (flatHexVertex (0.,0.) size (index + 1 % 6))))
 
 let flatHexGridCoordinates sizex sizey size =
+    // CurrentGridMetris.HalfWidth * 0.5,
+    // CurrentGridMetris.HalfHeight,
     // let width = float (size * 2)
     // let height = float size * sqrt 3.
     let func (row : int ) (column : int) =
-        let centerx = float row * CurrentGridMetris.Width * 3./4. 
-        let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0
+        let centerx = float row * CurrentGridMetris.Width * 3./4. - CurrentGridMetris.HalfWidth * 0.5
+        let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0 - CurrentGridMetris.HalfHeight
         (centerx, centery)
 
     [for j in 1 .. sizex -> [ for i in 1..sizey -> func j i]]
