@@ -10,7 +10,7 @@ type HexVector =
       HZ: int
     }
 
-let SCALE = 10.
+let SCALE = 20.
 let ORIGO =  { HX = 0; HY = 0; HZ =  0 }
 let UP = { HX = 0; HY = -1; HZ =  1 }
 let UP_RIGHT = { HX = 1; HY = 0; HZ =  1 }

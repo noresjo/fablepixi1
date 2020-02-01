@@ -9,12 +9,12 @@ let PIXI = Fable.Pixi.PIXI.pixi
 let Constants = {|
   Background = (float 0x191970)
   GridBackground = (float 0x777777)
-  GridAlpha = 1
+  GridAlpha = 0.5
   GridColor = (float 0x111111)
   HexagonColor = (float 0x564534)
   TextColor = (float 0xddddff)
-  GridRows = 32
-  GridColumns = 50
+  GridRows = 16
+  GridColumns = 25
 |}
 
 let TupleToPoint (x, y) =
@@ -35,7 +35,7 @@ let createFlatHexagonGraphics size =
     .drawPolygon(Fable.Core.U3.Case2 castHex)
 
 let CreateLineSegmentHexGrid  =
-  let graphics = PIXI.Graphics.Create().lineStyle(color = Constants.GridColor, width = 1.0, alpha = 1.)
+  let graphics = PIXI.Graphics.Create().lineStyle(color = Constants.GridColor, width = 1.0, alpha = Constants.GridAlpha)
   let rows = Constants.GridRows
   let columns = Constants.GridColumns
   let gridHeight = (float rows + 0.5) * Hex.CurrentGridMetris.Height 
