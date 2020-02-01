@@ -27,9 +27,9 @@ let CreateLineSegmentHexGrid  =
   let graphics = PIXI.Graphics.Create().lineStyle(color = (float)0x664422, width = 2.0, alpha = 1.)
 
   let lines = 
-    Hex.flatHexGridCoordinates 10 5 40
+    Hex.flatHexGridCoordinates 10 5 (int Hex.SCALE)
     |> List.collect (fun (hexx,hexy) -> 
-    (flatUnitHexagonLines 40.)
+    (flatUnitHexagonLines Hex.SCALE)
     |> List.map (fun ((x1,y1),(x2,y2)) -> (x1+hexx,y1+hexy),(x2+hexx,y2+hexy)))
 
   lines |> List.distinctBy (fun ((x1,y1),(x2,y2)) -> x1+y1+x2+y2 |> round)
@@ -42,6 +42,11 @@ let CreateLineSegmentHexGrid  =
 let createApplication =
   let options  = jsOptions<PIXI.ApplicationStaticOptions>(fun x ->
       x.antialias <- Some(true)
+      x.backgroundColor <-Some(float(0x1099bb))
       )
 
   PIXI.Application.Create(options)
+
+let style2 = jsOptions< PIXI.TextStyle>(fun x ->
+      x.fill <- Fable.Core.U6.Case3 (float 0xffffff)
+  )

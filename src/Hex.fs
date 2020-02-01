@@ -4,6 +4,45 @@ module Hex
 open System
 open System.Numerics
 
+type HexVector = 
+    { HX: int
+      HY: int
+      HZ: int
+    }
+
+let SCALE = 40.
+let ORIGO =  { HX = 0; HY = 0; HZ =  0 }
+let UP = { HX = 0; HY = -1; HZ =  1 }
+let UP_RIGHT = { HX = 1; HY = 0; HZ =  1 }
+let DOWN_RIGHT = { HX = 1; HY = 1; HZ =  0 }
+let DOWN = { HX = 0; HY = 1; HZ =  -1 }
+let DOWN_LEFT = { HX = -1; HY = 0; HZ =  -1 }
+let UP_LEFT = { HX = -1; HY = -1; HZ =  0 }
+let SQRT3 = sqrt(3.)
+
+let hexVectorValid hv =
+    hv.HX = (hv.HY + hv.HZ)
+
+/// Returns the y-coordinate of the hexagon, based on HX,HY,HZ; in 2d space with y downwards.
+let hexVectorScreenX hv = 
+    ((float)hv.HX * SQRT3) * SCALE;
+        
+let hexVectorScreenY hv = 
+    (float)(hv.HZ - hv.HY) * SCALE
+
+// let hexVectorTo
+
+//         public static Vector2 GetVector2(this HexVector hex)
+//         {
+//             return new Vector2(hex.GetPositionX(), hex.GetPositionY());
+//         }
+
+//         /// <summary>
+//         /// </summary>
+//         public static float GetPositionY(this HexVector hex)
+//         {
+//             return (float)(hex.HZ - hex.HY) * SCALE;
+
 
 let eqMargin = 0.001
 
@@ -68,5 +107,5 @@ let flatHexGridCoordinates sizex sizey size =
         let centery = float column * height + float (row % 2) * height /2.0
         (centerx, centery)
 
-    [ for j in 1 .. sizex -> [ for i in 1..sizey -> func j i]]
+    [for j in 1 .. sizex -> [ for i in 1..sizey -> func j i]]
     |> List.concat

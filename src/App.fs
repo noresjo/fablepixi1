@@ -12,19 +12,28 @@ let hexAt sx sy size =
   result.y <- sy
   app.stage.addChild result
 
-let mouseoverHex = hexAt 0. 0. 40.
+let mouseoverHex = hexAt 0. 0. Hex.SCALE
 
 mouseoverHex.visible <- false
-mouseoverHex.ca
 
 let gridGraphics = CreateLineSegmentHexGrid
   
 app.stage.addChild gridGraphics |>ignore
 
-gridGraphics.on "mousemove" 
+let style = PIXI.TextStyle.Create( stroke = (Fable.Core.U2.Case1 "ffffff")) // gradient
 
-let update(_) = 
-  hex.rotation <- hex.rotation + 0.01
-  None
+let basicText = PIXI.Text.Create("hello", (Fable.Core.U2.Case2 PixiHal.style2))|> app.stage.addChild
+basicText.x <- 50.
+basicText.y <- 100.
 
-app.ticker.add update |> ignore
+
+let onMouseMoveHexgrid = 
+  ignore //text. <- "hsdf"
+
+gridGraphics.on( "mousemove", fun () -> onMouseMoveHexgrid()) |> ignore
+
+// let update(_) = 
+//   hex.rotation <- hex.rotation + 0.01
+//   None
+
+//app.ticker.add update |> ignore
