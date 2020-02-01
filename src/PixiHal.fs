@@ -25,10 +25,21 @@ let createFlatHexagonGraphics size =
 
 let CreateLineSegmentHexGrid  =
   let graphics = PIXI.Graphics.Create().lineStyle(color = (float)0x664422, width = 2.0, alpha = 1.)
-  let rows = 5
-  let columns = 10
+  let rows = 4
+  let columns = 7
   let gridHeight = (float rows + 0.5) * Hex.CurrentGridMetris.Height 
-  let gridWidth = (float columns + 1.)  * Hex.CurrentGridMetris.Width * 2./3. + Hex.CurrentGridMetris.HalfWidth * SQRT3/2.
+
+  let even = (float (columns) % 2.)
+  let oddColumns = float (columns /2) + even
+  let evenColumns = float (columns / 2) 
+  
+  printfn "%f" oddColumns
+  printfn "%f" evenColumns
+
+  let gridWidth = 
+    CurrentGridMetris.Width * oddColumns +
+    CurrentGridMetris.HalfWidth * 1. * evenColumns +
+    CurrentGridMetris.HalfWidth * 0.5 * (1. - even)
  
   graphics.drawRect( 
     CurrentGridMetris.HalfWidth * 0.5,
