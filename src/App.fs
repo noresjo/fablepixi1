@@ -17,15 +17,17 @@ let mouseoverHex = hexAt 0. 0. Hex.SCALE
 mouseoverHex.visible <- false
 
 let gridGraphics = CreateLineSegmentHexGrid
-  
+
+gridGraphics.x <- 20.
+gridGraphics.y <- 20.
+ 
 app.stage.addChild gridGraphics |>ignore
 
 let style = PIXI.TextStyle.Create( stroke = (Fable.Core.U2.Case1 "ffffff")) // gradient
 
-let basicText = PIXI.Text.Create("hello", (Fable.Core.U2.Case2 PixiHal.style2))|> app.stage.addChild
-basicText.x <- 50.
-basicText.y <- 100.
-
+let basicText = PIXI.Text.Create("A grid border", (Fable.Core.U2.Case2 PixiHal.style2))|> app.stage.addChild
+basicText.x <- 0.
+basicText.y <- 0.
 
 let onMouseMoveHexgrid = 
   ignore //text. <- "hsdf"

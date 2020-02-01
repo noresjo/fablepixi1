@@ -30,6 +30,7 @@ let hexVectorScreenX hv =
 let hexVectorScreenY hv = 
     (float)(hv.HZ - hv.HY) * SCALE
 
+
 // let hexVectorTo
 
 //         public static Vector2 GetVector2(this HexVector hex)
@@ -43,6 +44,21 @@ let hexVectorScreenY hv =
 //         {
 //             return (float)(hex.HZ - hex.HY) * SCALE;
 
+type HexMetrics =
+    {
+        HalfWidth : float
+        HalfHeight : float
+        Width : float
+        Height : float
+    }
+
+let CurrentGridMetris = 
+    {
+        HalfWidth = SCALE
+        HalfHeight = SCALE * SQRT3 / 2.
+        Width = SCALE * 2.
+        Height = SCALE * SQRT3
+    }
 
 let eqMargin = 0.001
 
@@ -100,11 +116,11 @@ let flatUnitHexagonLines size =
     |> List.map (fun index -> ((flatHexVertex (0.,0.) size index), (flatHexVertex (0.,0.) size (index + 1 % 6))))
 
 let flatHexGridCoordinates sizex sizey size =
-    let width = float (size * 2)
-    let height = float size * sqrt 3.
+    // let width = float (size * 2)
+    // let height = float size * sqrt 3.
     let func (row : int ) (column : int) =
-        let centerx = float row * width * 3./4.
-        let centery = float column * height + float (row % 2) * height /2.0
+        let centerx = float row * CurrentGridMetris.Width * 3./4. 
+        let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0
         (centerx, centery)
 
     [for j in 1 .. sizex -> [ for i in 1..sizey -> func j i]]

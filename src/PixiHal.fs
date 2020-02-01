@@ -25,14 +25,25 @@ let createFlatHexagonGraphics size =
 
 let CreateLineSegmentHexGrid  =
   let graphics = PIXI.Graphics.Create().lineStyle(color = (float)0x664422, width = 2.0, alpha = 1.)
+  let rows = 5
+  let columns = 10
+  let gridHeight = (float rows + 0.5) * Hex.CurrentGridMetris.Height 
+  let gridWidth = (float columns + 1.)  * Hex.CurrentGridMetris.Width * 2./3. + Hex.CurrentGridMetris.HalfWidth * SQRT3/2.
+ 
+  graphics.drawRect( 
+    CurrentGridMetris.HalfWidth * 0.5,
+    CurrentGridMetris.HalfHeight,
+    gridWidth,
+    gridHeight
+  ) |> ignore
 
   let lines = 
-    Hex.flatHexGridCoordinates 10 5 (int Hex.SCALE)
+    Hex.flatHexGridCoordinates columns rows (int Hex.SCALE)
     |> List.collect (fun (hexx,hexy) -> 
     (flatUnitHexagonLines Hex.SCALE)
     |> List.map (fun ((x1,y1),(x2,y2)) -> (x1+hexx,y1+hexy),(x2+hexx,y2+hexy)))
 
-  lines |> List.distinctBy (fun ((x1,y1),(x2,y2)) -> x1+y1+x2+y2 |> round)
+  //lines |> List.distinctBy (fun ((x1,y1),(x2,y2)) -> x1+y1+x2+y2 |> round)
  
   |> List.map (fun (a,b) -> DrawLineSegmentOnGrapics graphics a b)
   |> ignore
