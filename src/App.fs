@@ -32,8 +32,6 @@ basicText.x <- 0.
 basicText.y <- 0.
 basicText |> app.stage.addChild |> ignore
 
-
-
 type Coordinate =
   | PixiPunkt of Fable.Pixi.PIXI.Point
   | Tuple of float * float
@@ -57,12 +55,14 @@ let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEve
   let y = localy
   Tuple (x,y) |> ToCoordinateString |> fun x -> text <- text + x 
 
-  printfn "%A" e.data.target
+  let hv = Hex.pointToHexVector x y
+  text <- text + (sprintf "  %i-%i-%i %b" hv.HX hv.HY hv.HZ hv.isValid)
+  printfn "%A" e.data.target 
 
   basicText.text <- text
 
 gridGraphics.interactive <- true
-gridGraphics.on( InteractionEventTypes.ofInteractionMouseEvents InteractionMouseEvents.Mousemove, onMouseMoveHexgrid gridGraphics) |> ignore
+gridGraphics.on( InteractionEventTypes.ofInteractionPointerEvents InteractionPointerEvents.Pointermove, onMouseMoveHexgrid gridGraphics) |> ignore
 
 // let update(_) = 
 //   hex.rotation <- hex.rotation + 0.01

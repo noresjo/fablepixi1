@@ -9,6 +9,8 @@ type HexVector =
       HY: int
       HZ: int
     }
+  with member this.isValid =
+                this.HX = (this.HY + this.HZ)
 
 let SCALE = 20.
 let ORIGO =  { HX = 0; HY = 0; HZ =  0 }
@@ -30,8 +32,36 @@ let hexVectorScreenX hv =
 let hexVectorScreenY hv = 
     (float)(hv.HZ - hv.HY) * SCALE
 
+let pointToHexVector inputx inputy =
+    let origo = (0,0)
+    let x, y = inputx, inputy
 
-// let hexVectorTo
+    let hx = x/ SCALE / SQRT3
+    let hy = (x / SQRT3 - y) / SCALE / 2.
+    let hz = (x / SQRT3 + y) / SCALE / 2.
+
+    let mutable intHx = hx |> round |> int
+    let mutable intHy = hy |> round |> int
+    let mutable intHz = hz |> round |> int
+
+    let first = { HX=intHx;HY=intHy;HZ=intHz}
+
+    if first.isValid then
+        first
+    else
+        let absHx = abs hx - float intHx
+        let absHy = abs hy - float intHy
+        let absHz = abs hz - float intHz
+
+        if absHx > absHy && absHx > absHz then
+            intHx <- intHy + intHz
+        else if (absHy > absHx && absHy > absHx) then
+            intHy <- intHx - intHz
+        else
+            intHz <- intHx - intHy
+
+        { HX=intHx;HY=intHy;HZ=intHz}
+         
 
 //         public static Vector2 GetVector2(this HexVector hex)
 //         {
