@@ -32,28 +32,30 @@ basicText.x <- 0.
 basicText.y <- 0.
 basicText |> app.stage.addChild |> ignore
 
+
+
 type Coordinate =
-  | Point of Fable.Pixi.PIXI.Point
-  | Tuple of (float * float)
-  | Pair of float * float
+  | PixiPunkt of Fable.Pixi.PIXI.Point
+  | Tuple of float * float
 
 let ToCoordinateString (c : Coordinate) =
   let result x y = 
-    "(" + (x |> int |> string) + "," + (y |> int |> string) + ")"
+    sprintf "(%i,%i)" (x |> int) (y |> int)
+
   match c with
-  | Point c -> result c.x c.y
-  | Tuple t -> result (fst t) (snd t)
-  | Pair (x, y) -> result x y
+  | PixiPunkt c -> result c.x c.y
+  | Tuple (x,y) -> result x y
 
 
-let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) = 
+let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   let point = e.data.``global``
-  let localx, localy = point.x - grid.x, point.y - grid.y
+  let localx = point.x - grid.x
+  let localy = point.y - grid.y
 
-  let mutable text = ToCoordinateString (Point point)
-
+  let mutable text = ToCoordinateString (PixiPunkt point)
   let x = localx
   let y = localy
+  Tuple (x,y) |> ToCoordinateString |> fun x -> text <- text + x 
 
   printfn "%A" e.data.target
 

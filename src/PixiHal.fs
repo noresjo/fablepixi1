@@ -14,7 +14,7 @@ let Constants = {|
   GridColor = (float 0xffc600)
   HexagonColor = (float 0x564534)
   TextColor = (float 0xddddff)
-  GridRows = 16
+  GridRows = 15
   GridColumns = 25
 |}
 
