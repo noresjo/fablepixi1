@@ -7,10 +7,11 @@ open Fable.Core.JsInterop
 let PIXI = Fable.Pixi.PIXI.pixi
 
 let Constants = {|
-  Background = (float 0x191970)
-  GridBackground = (float 0x777777)
-  GridAlpha = 0.5
-  GridColor = (float 0x111111)
+  Background = (float 0x193549)
+  GridBorderColor = (float 0x04080a)
+  GridBackground = (float 0x0050A4)
+  GridAlpha = 1.
+  GridColor = (float 0xffc600)
   HexagonColor = (float 0x564534)
   TextColor = (float 0xddddff)
   GridRows = 16
@@ -35,7 +36,7 @@ let createFlatHexagonGraphics size =
     .drawPolygon(Fable.Core.U3.Case2 castHex)
 
 let CreateLineSegmentHexGrid  =
-  let graphics = PIXI.Graphics.Create().lineStyle(color = Constants.GridColor, width = 1.0, alpha = Constants.GridAlpha)
+  let graphics = PIXI.Graphics.Create()
   let rows = Constants.GridRows
   let columns = Constants.GridColumns
   let gridHeight = (float rows + 0.5) * Hex.CurrentGridMetris.Height 
@@ -62,10 +63,11 @@ let CreateLineSegmentHexGrid  =
 
   graphics
     .beginFill(Constants.GridBackground)
+    .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
     .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
     .endFill()
+    .lineStyle(color = Constants.GridColor, width = 1.0, alpha = Constants.GridAlpha)
     .hitArea <- Fable.Core.U5.Case1 rectangle
-
   let lines = 
     Hex.flatHexGridCoordinates columns rows (int Hex.SCALE)
     |> List.collect (fun (hexx,hexy) -> 
