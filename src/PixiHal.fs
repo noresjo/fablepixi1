@@ -11,9 +11,9 @@ let Constants = {|
   GridBorderColor = (float 0x04080a)
   GridBackground = (float 0x0050A4)
   GridAlpha = 1.
-  GridColor = (float 0xffc600)
+  TextColor = (float 0xc6ff00)
   HexagonColor = (float 0x564534)
-  TextColor = (float 0xddddff)
+  GridColor = (float 0x00c6ff)
   GridRows = 15
   GridColumns = 25
 |}
@@ -80,6 +80,8 @@ let CreateLineSegmentHexGrid  =
   |> ignore
 
   graphics
+    .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
+    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
 
 let createApplication =
   let options  = jsOptions<PIXI.ApplicationStaticOptions>(fun x ->
