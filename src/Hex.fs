@@ -39,9 +39,12 @@ type AxialCoord<'T> =
       r: 'T
     }
 
+let axialCoord q r =
+    {q=q;r=r}
+
 type FloatAxialCoord = AxialCoord<float>
 
-let toTwoDCoord hex =         
+let axialCoordToPixel hex =         
     let x = SCALE * (     3./2. * float hex.q                    )
     let y = SCALE * ( SQRT3/2. * float hex.q  +  SQRT3 * float hex.r )
     (x,y)
@@ -97,7 +100,10 @@ let CurrentGridMetris =
 
 let eqMargin = 0.001
 
-let sameFloat (f1:float) (f2:float) =
+let inline addTuple (x1,y1) (x2, y2) =
+    (x1+x2,y1+y2)
+
+let sameFloat f1 f2 =
     (abs(f1-f2)) < eqMargin
 
 let samePoint (x1,y1) (x2, y2) =
@@ -159,3 +165,22 @@ let flatHexInRectangleCoordinates (row : int ) (column : int) =
 let flatHexGridCoordinates sizex sizey size =
     [for j in 1 .. sizex -> [ for i in 1..sizey -> flatHexInRectangleCoordinates j i]]
     |> List.concat
+
+let flatHexCircleGrid radius = 
+    // var results = []
+    // for each -N ≤ x ≤ +N:
+    //     for each max(-N, -x-N) ≤ y ≤ min(+N, -x+N):
+    //         var z = -x-y
+    //         results.append(cube_add(center, Cube(x, y, z)))
+    let range = [-radius..radius]
+    
+    range |> List.collect (fun x -> 
+        let lower = max -(radius) -(x+radius)
+        let upper = min radius (radius-x)
+
+        // printfn "x %i lower %i upper %i" x lower upper
+        let result = [ for y in lower..upper -> { a=x;b=y;c= 0-(x+y)} ]
+        // printfn "%A" result
+        result
+    ) |> List.map cubeCoordToAxial
+ 

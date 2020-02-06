@@ -21,7 +21,7 @@ let Constants = {|
 type Coordinate =
   | PixiPunkt of Fable.Pixi.PIXI.Point
   | Tuple of float * float
-
+ 
 let ToCoordinateString (c : Coordinate) =
   let result x y = 
     sprintf "(%i,%i)" (x |> int) (y |> int)

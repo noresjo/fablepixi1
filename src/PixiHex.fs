@@ -7,7 +7,7 @@ open Fable.Pixi
 
 let createFlatHexagonGraphics size =
 
-  let hex = flatUnitHexagonVertices size
+  let hex = flatUnitHexagonVertices Hex.SCALE
   let pixiPointsHex = hex |> List.map (fun (x,y) -> PIXI.Point.Create(x = x, y = y ))
   let castHex = ResizeArray<PIXI.Point> pixiPointsHex
   

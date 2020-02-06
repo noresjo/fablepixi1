@@ -9,8 +9,8 @@ let app = createApplication
 document.body.appendChild app.view |> ignore
 app.stage.sortableChildren <- true 
 
-let hexAt sx sy size = 
-  let result = createFlatHexagonGraphics size
+let hexAt (sx, sy) = 
+  let result = createFlatHexagonGraphics()
   result.x <- sx
   result.y <- sy
   result.zIndex <- 100.
@@ -22,7 +22,7 @@ let hexAt sx sy size =
 //                                           hexAt x y Hex.SCALE]]
 
 
-let mouseoverHex = hexAt 0. 0. Hex.SCALE
+let mouseoverHex = hexAt (0.,0.)
 
 mouseoverHex.visible <- true
 
@@ -51,7 +51,7 @@ let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEve
   Tuple (x,y) |> ToCoordinateString |> fun x -> text <- text + x 
 
   let ax = Hex.twoDCoordToAxial localx localy
-  let hex2dCoord = toTwoDCoord ax
+  let hex2dCoord = axialCoordToPixel ax
   
   Tuple hex2dCoord |> ToCoordinateString |> fun x -> text <- text + x 
   mouseoverHex.x <- fst hex2dCoord
@@ -67,6 +67,22 @@ let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEve
 gridGraphics.interactive <- true
 gridGraphics.on( InteractionEventTypes.ofInteractionPointerEvents InteractionPointerEvents.Pointermove, onMouseMoveHexgrid gridGraphics) |> ignore
 
+let origo =  axialCoord 13 1 |> axialCoordToPixel
+let addOrigo = (addTuple origo)
+printfn "%A" (flatHexCircleGrid 1)
+
+let positions = 
+  flatHexCircleGrid 3
+  |> List.map (axialCoordToPixel >> addOrigo)
+
+positions
+|> List.map hexAt
+|> ignore
+
+positions
+|> List.map (fun (x,y) -> Tuple (x,y) |> ToCoordinateString) 
+|> List.map (fun s -> printfn "%s" s)
+|> ignore
 // let update(_) = 
 //   hex.rotation <- hex.rotation + 0.01
 //   None
