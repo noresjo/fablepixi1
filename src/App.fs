@@ -4,24 +4,32 @@ open Browser.Dom
 open PixiHal
 open Fable.Pixi.PIXI.Interaction
 open Fable.Pixi.PIXI
-
+open Hex
 let app = createApplication
 document.body.appendChild app.view |> ignore
+app.stage.sortableChildren <- true 
 
 let hexAt sx sy size = 
   let result = createFlatHexagonGraphics size
   result.x <- sx
   result.y <- sy
+  result.zIndex <- 100.
   app.stage.addChild result
+
+
+// [for j in 0 .. 10 -> [ for i in 1..10 -> 
+//                                           let x,y = {q=i;r=j}.ToTwoDCoord
+//                                           hexAt x y Hex.SCALE]]
+
 
 let mouseoverHex = hexAt 0. 0. Hex.SCALE
 
-mouseoverHex.visible <- false
+mouseoverHex.visible <- true
 
 let gridGraphics = CreateLineSegmentHexGrid
 
-gridGraphics.x <- 20.
-gridGraphics.y <- 20.
+//gridGraphics.x <- 20.
+//gridGraphics.y <- 20.
  
 app.stage.addChild gridGraphics |> ignore
 
@@ -55,8 +63,16 @@ let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEve
   let y = localy
   Tuple (x,y) |> ToCoordinateString |> fun x -> text <- text + x 
 
-  let hv = Hex.pointToHexVector x y
-  text <- text + (sprintf "  %i-%i-%i %b" hv.HX hv.HY hv.HZ hv.isValid)
+  let ax = Hex.twoDCoordToAxial localx localy
+  let hex2dCoord = ax.ToTwoDCoord
+  
+  Tuple hex2dCoord |> ToCoordinateString |> fun x -> text <- text + x 
+  mouseoverHex.x <- fst hex2dCoord
+  mouseoverHex.y <- snd hex2dCoord
+
+  text <- text + (sprintf "  %i,%i" ax.q ax.r)
+  
+  // text <- text + (sprintf "  %i-%i" ax.cx ax.cy )
   printfn "%A" e.data.target 
 
   basicText.text <- text

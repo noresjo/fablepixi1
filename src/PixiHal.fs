@@ -12,7 +12,7 @@ let Constants = {|
   GridBackground = (float 0x0050A4)
   GridAlpha = 1.
   TextColor = (float 0xc6ff00)
-  HexagonColor = (float 0x564534)
+  HexagonColor = (float 0xff00c6)
   GridColor = (float 0x00c6ff)
   GridRows = 15
   GridColumns = 25
@@ -32,7 +32,7 @@ let createFlatHexagonGraphics size =
   
   PIXI.Graphics
     .Create()
-    .lineStyle(color = Constants.HexagonColor, width = 4., alpha = 0.3)
+    .lineStyle(color = Constants.HexagonColor, width = 1., alpha = 1.)
     .drawPolygon(Fable.Core.U3.Case2 castHex)
 
 let CreateLineSegmentHexGrid  =
@@ -62,10 +62,10 @@ let CreateLineSegmentHexGrid  =
     )
 
   graphics
-    .beginFill(Constants.GridBackground)
+//    .beginFill(Constants.GridBackground)
     .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
-    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
-    .endFill()
+//    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+//    .endFill()
     .lineStyle(color = Constants.GridColor, width = 1.0, alpha = Constants.GridAlpha)
     .hitArea <- Fable.Core.U5.Case1 rectangle
   let lines = 
@@ -80,8 +80,8 @@ let CreateLineSegmentHexGrid  =
   |> ignore
 
   graphics
-    .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
-    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+//    .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
+//    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
 
 let createApplication =
   let options  = jsOptions<PIXI.ApplicationStaticOptions>(fun x ->

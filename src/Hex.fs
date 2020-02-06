@@ -2,77 +2,90 @@
 // No references to PIXI here
 module Hex
 open System
-open System.Numerics
-
-type HexVector = 
-    { HX: int
-      HY: int
-      HZ: int
-    }
-  with member this.isValid =
-                this.HX = (this.HY + this.HZ)
 
 let SCALE = 20.
-let ORIGO =  { HX = 0; HY = 0; HZ =  0 }
-let UP = { HX = 0; HY = -1; HZ =  1 }
-let UP_RIGHT = { HX = 1; HY = 0; HZ =  1 }
-let DOWN_RIGHT = { HX = 1; HY = 1; HZ =  0 }
-let DOWN = { HX = 0; HY = 1; HZ =  -1 }
-let DOWN_LEFT = { HX = -1; HY = 0; HZ =  -1 }
-let UP_LEFT = { HX = -1; HY = -1; HZ =  0 }
 let SQRT3 = sqrt(3.)
 
+type CubeCoord = 
+    { cx: int
+      cy: int
+      cz: int
+    }
+  with member this.IsValid =
+                0 = this.cx + this.cy + this.cz
+
+type FloatCubeCoord = 
+    { fcx: float
+      fcy: float
+      fcz: float
+    }
+    with member cube.ToCubeCoord =
+                let mutable rx = round cube.fcx
+                let mutable ry = round cube.fcy
+                let mutable rz = round cube.fcz
+
+                let xDiff = abs(rx - cube.fcx)
+                let yDiff = abs(ry - cube.fcy)
+                let zDiff = abs(rz - cube.fcz)
+
+                if xDiff > yDiff && xDiff > zDiff then
+                    rx <- -ry-rz
+                else if yDiff > zDiff then
+                    ry <- -rx-rz
+                else
+                    rz <- -rx-ry
+
+                { cx=int rx; cy=int ry; cz=int rz }
+
+type FloatAxialCoord =
+    { fq: float
+      fr: float
+    }
+
+
+type AxialCoord =
+    { q: int
+      r: int
+    }
+    with member hex.ToTwoDCoord =         
+                    let x = SCALE * (     3./2. * float hex.q                    )
+                    let y = SCALE * ( SQRT3/2. * float hex.q  +  SQRT3 * float hex.r )
+                    (x,y)
+
+
+
+let cubeCoordToAxial (cube : CubeCoord) =
+    let q = cube.cx
+    let r = cube.cz
+    {r=r;q=q}
+
+let floatAxialCoordToCube (fax : FloatAxialCoord) =
+    let fx = fax.fq
+    let fz = fax.fr
+    let fy = -fx-fz
+    {fcx = fx; fcy=fy; fcz=fz}    
+
+let floatAxialCoordRound (a : FloatAxialCoord) =
+    (floatAxialCoordToCube a).ToCubeCoord |> cubeCoordToAxial
+
+let twoDCoordToAxial x y =
+    let q = ( 2./3. * x                        ) / SCALE
+    let r = (-1./3. * x  +  SQRT3/3. * y) / SCALE
+    floatAxialCoordRound {fq = q; fr = r}
+
+
+
+let ORIGO =  { cx = 0; cy = 0; cz =  0 }
+let UP = { cx = 0; cy = -1; cz =  1 }
+let UP_RIGHT = { cx = 1; cy = 0; cz =  1 }
+let DOWN_RIGHT = { cx = 1; cy = 1; cz =  0 }
+let DOWN = { cx = 0; cy = 1; cz =  -1 }
+let DOWN_LEFT = { cx = -1; cy = 0; cz =  -1 }
+let UP_LEFT = { cx = -1; cy = -1; cz =  0 }
+
 let hexVectorValid hv =
-    hv.HX = (hv.HY + hv.HZ)
+    0 = hv.cx + hv.cy + hv.cz
 
-/// Returns the y-coordinate of the hexagon, based on HX,HY,HZ; in 2d space with y downwards.
-let hexVectorScreenX hv = 
-    ((float)hv.HX * SQRT3) * SCALE;
-        
-let hexVectorScreenY hv = 
-    (float)(hv.HZ - hv.HY) * SCALE
-
-let pointToHexVector inputx inputy =
-    let origo = (0,0)
-    let x, y = inputx, inputy
-
-    let hx = x/ SCALE / SQRT3
-    let hy = (x / SQRT3 - y) / SCALE / 2.
-    let hz = (x / SQRT3 + y) / SCALE / 2.
-
-    let mutable intHx = hx |> round |> int
-    let mutable intHy = hy |> round |> int
-    let mutable intHz = hz |> round |> int
-
-    let first = { HX=intHx;HY=intHy;HZ=intHz}
-
-    if first.isValid then
-        first
-    else
-        let absHx = abs hx - float intHx
-        let absHy = abs hy - float intHy
-        let absHz = abs hz - float intHz
-
-        if absHx > absHy && absHx > absHz then
-            intHx <- intHy + intHz
-        else if (absHy > absHx && absHy > absHx) then
-            intHy <- intHx - intHz
-        else
-            intHz <- intHx - intHy
-
-        { HX=intHx;HY=intHy;HZ=intHz}
-         
-
-//         public static Vector2 GetVector2(this HexVector hex)
-//         {
-//             return new Vector2(hex.GetPositionX(), hex.GetPositionY());
-//         }
-
-//         /// <summary>
-//         /// </summary>
-//         public static float GetPositionY(this HexVector hex)
-//         {
-//             return (float)(hex.HZ - hex.HY) * SCALE;
 
 type HexMetrics =
     {
@@ -151,8 +164,8 @@ let flatHexGridCoordinates sizex sizey size =
     // let width = float (size * 2)
     // let height = float size * sqrt 3.
     let func (row : int ) (column : int) =
-        let centerx = float row * CurrentGridMetris.Width * 3./4. - CurrentGridMetris.HalfWidth * 0.5
-        let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0 - CurrentGridMetris.HalfHeight
+        let centerx = float row * CurrentGridMetris.Width * 3./4.
+        let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0  - CurrentGridMetris.Height
         (centerx, centery)
 
     [for j in 1 .. sizex -> [ for i in 1..sizey -> func j i]]
