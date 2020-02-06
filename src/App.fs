@@ -2,8 +2,8 @@ module AmazingApp
 
 open Browser.Dom
 open PixiHal
+open PixiHex
 open Fable.Pixi.PIXI.Interaction
-open Fable.Pixi.PIXI
 open Hex
 let app = createApplication
 document.body.appendChild app.view |> ignore
@@ -40,19 +40,6 @@ basicText.x <- 0.
 basicText.y <- 0.
 basicText |> app.stage.addChild |> ignore
 
-type Coordinate =
-  | PixiPunkt of Fable.Pixi.PIXI.Point
-  | Tuple of float * float
-
-let ToCoordinateString (c : Coordinate) =
-  let result x y = 
-    sprintf "(%i,%i)" (x |> int) (y |> int)
-
-  match c with
-  | PixiPunkt c -> result c.x c.y
-  | Tuple (x,y) -> result x y
-
-
 let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   let point = e.data.``global``
   let localx = point.x - grid.x
@@ -64,7 +51,7 @@ let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEve
   Tuple (x,y) |> ToCoordinateString |> fun x -> text <- text + x 
 
   let ax = Hex.twoDCoordToAxial localx localy
-  let hex2dCoord = ax.ToTwoDCoord
+  let hex2dCoord = toTwoDCoord ax
   
   Tuple hex2dCoord |> ToCoordinateString |> fun x -> text <- text + x 
   mouseoverHex.x <- fst hex2dCoord

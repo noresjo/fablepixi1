@@ -10,6 +10,7 @@
     </Compile>
     <Compile Include="Hex.fs" />
     <Compile Include="PixiHal.fs" />
+    <Compile Include="PixiHex.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />

@@ -6,86 +6,78 @@ open System
 let SCALE = 20.
 let SQRT3 = sqrt(3.)
 
-type CubeCoord = 
-    { cx: int
-      cy: int
-      cz: int
+type CubeCoord<'T> = 
+    { a: 'T
+      b: 'T
+      c: 'T
     }
-  with member this.IsValid =
-                0 = this.cx + this.cy + this.cz
+type FloatCubeCoord = CubeCoord<float>
 
-type FloatCubeCoord = 
-    { fcx: float
-      fcy: float
-      fcz: float
-    }
-    with member cube.ToCubeCoord =
-                let mutable rx = round cube.fcx
-                let mutable ry = round cube.fcy
-                let mutable rz = round cube.fcz
+let IsValid cubeCoord =
+    0 = cubeCoord.a + cubeCoord.b + cubeCoord.c
 
-                let xDiff = abs(rx - cube.fcx)
-                let yDiff = abs(ry - cube.fcy)
-                let zDiff = abs(rz - cube.fcz)
+let cubeRound (cube : FloatCubeCoord) =
+    let mutable rx = round cube.a
+    let mutable ry = round cube.b
+    let mutable rz = round cube.c
 
-                if xDiff > yDiff && xDiff > zDiff then
-                    rx <- -ry-rz
-                else if yDiff > zDiff then
-                    ry <- -rx-rz
-                else
-                    rz <- -rx-ry
+    let xDiff = abs(rx - cube.a)
+    let yDiff = abs(ry - cube.b)
+    let zDiff = abs(rz - cube.c)
 
-                { cx=int rx; cy=int ry; cz=int rz }
+    if xDiff > yDiff && xDiff > zDiff then
+        rx <- -ry-rz
+    else if yDiff > zDiff then
+        ry <- -rx-rz
+    else
+        rz <- -rx-ry
 
-type FloatAxialCoord =
-    { fq: float
-      fr: float
+    { a=int rx; b=int ry; c=int rz }
+
+type AxialCoord<'T> =
+    { q: 'T
+      r: 'T
     }
 
+type FloatAxialCoord = AxialCoord<float>
 
-type AxialCoord =
-    { q: int
-      r: int
-    }
-    with member hex.ToTwoDCoord =         
-                    let x = SCALE * (     3./2. * float hex.q                    )
-                    let y = SCALE * ( SQRT3/2. * float hex.q  +  SQRT3 * float hex.r )
-                    (x,y)
+let toTwoDCoord hex =         
+    let x = SCALE * (     3./2. * float hex.q                    )
+    let y = SCALE * ( SQRT3/2. * float hex.q  +  SQRT3 * float hex.r )
+    (x,y)
 
-
-
-let cubeCoordToAxial (cube : CubeCoord) =
-    let q = cube.cx
-    let r = cube.cz
+let cubeCoordToAxial<'T> (cube : CubeCoord<'T>) =
+    let q = cube.a
+    let r = cube.c
     {r=r;q=q}
 
-let floatAxialCoordToCube (fax : FloatAxialCoord) =
-    let fx = fax.fq
-    let fz = fax.fr
-    let fy = -fx-fz
-    {fcx = fx; fcy=fy; fcz=fz}    
+let inline axialCoordToCube (ax) =
+    let fx = ax.q
+    let fz = ax.r
+    let fy =  -fx-fz
+    {a = fx; b=fy; c=fz}    
 
-let floatAxialCoordRound (a : FloatAxialCoord) =
-    (floatAxialCoordToCube a).ToCubeCoord |> cubeCoordToAxial
+let axialCoordcubeRound a =
+     cubeRound (axialCoordToCube a) |> cubeCoordToAxial
 
 let twoDCoordToAxial x y =
     let q = ( 2./3. * x                        ) / SCALE
     let r = (-1./3. * x  +  SQRT3/3. * y) / SCALE
-    floatAxialCoordRound {fq = q; fr = r}
+    axialCoordcubeRound {q = q; r = r}
 
 
 
-let ORIGO =  { cx = 0; cy = 0; cz =  0 }
-let UP = { cx = 0; cy = -1; cz =  1 }
-let UP_RIGHT = { cx = 1; cy = 0; cz =  1 }
-let DOWN_RIGHT = { cx = 1; cy = 1; cz =  0 }
-let DOWN = { cx = 0; cy = 1; cz =  -1 }
-let DOWN_LEFT = { cx = -1; cy = 0; cz =  -1 }
-let UP_LEFT = { cx = -1; cy = -1; cz =  0 }
+let ORIGO =  { a = 0; b = 0; c =  0 }
+
+let UP = { a = 0; b = -1; c =  1 }
+let UP_RIGHT = { a = 1; b = 0; c =  1 }
+let DOWN_RIGHT = { a = 1; b = 1; c =  0 }
+let DOWN = { a = 0; b = 1; c =  -1 }
+let DOWN_LEFT = { a = -1; b = 0; c =  -1 }
+let UP_LEFT = { a = -1; b = -1; c =  0 }
 
 let hexVectorValid hv =
-    0 = hv.cx + hv.cy + hv.cz
-
+    0 = hv.a + hv.b + hv.c
 
 type HexMetrics =
     {
@@ -158,15 +150,12 @@ let flatUnitHexagonLines size =
     [0..5] 
     |> List.map (fun index -> ((flatHexVertex (0.,0.) size index), (flatHexVertex (0.,0.) size (index + 1 % 6))))
 
-let flatHexGridCoordinates sizex sizey size =
-    // CurrentGridMetris.HalfWidth * 0.5,
-    // CurrentGridMetris.HalfHeight,
-    // let width = float (size * 2)
-    // let height = float size * sqrt 3.
-    let func (row : int ) (column : int) =
-        let centerx = float row * CurrentGridMetris.Width * 3./4.
-        let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0  - CurrentGridMetris.Height
-        (centerx, centery)
 
-    [for j in 1 .. sizex -> [ for i in 1..sizey -> func j i]]
+let flatHexInRectangleCoordinates (row : int ) (column : int) =
+    let centerx = float row * CurrentGridMetris.Width * 3./4.
+    let centery = float column * CurrentGridMetris.Height + float (row % 2) * CurrentGridMetris.Height /2.0  - CurrentGridMetris.Height
+    (centerx, centery)
+
+let flatHexGridCoordinates sizex sizey size =
+    [for j in 1 .. sizex -> [ for i in 1..sizey -> flatHexInRectangleCoordinates j i]]
     |> List.concat
