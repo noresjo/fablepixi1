@@ -55,9 +55,9 @@ let onMouseMove (board : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
 
 let onMouseUpBoard (board : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   let localPos = e.data.getLocalPosition board
-  let ax = Hex.twoDCoordToAxial localPos.x localPos.y  
-  let addAx = axialAdd ax
-  let addAtMouse = (addAx >> hexAtAxialOnBoard )
+  let offset = Hex.twoDCoordToAxial localPos.x localPos.y  
+  let addAxialOffset = axialAdd offset
+  let addAtMouse = (addAxialOffset >> hexAtAxialOnBoard )
   
   brickShapeLocations 
   |> List.map addAtMouse
