@@ -26,9 +26,6 @@ let CreateLineSegmentHexGrid  =
   let oddColumns = float (columns /2) + even
   let evenColumns = float (columns / 2) 
   
-  printfn "%f" oddColumns
-  printfn "%f" evenColumns
-
   let gridWidth = 
     CurrentGridMetris.Width * oddColumns +
     CurrentGridMetris.HalfWidth * 1. * evenColumns +

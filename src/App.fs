@@ -4,34 +4,35 @@ open Browser.Dom
 open PixiHal
 open PixiHex
 open Fable.Pixi.PIXI.Interaction
+
 open Hex
 let app = createApplication
 document.body.appendChild app.view |> ignore
 app.stage.sortableChildren <- true 
 
-let hexAt (sx, sy) = 
+
+let hexAt (parent : Fable.Pixi.PIXI.Container) (sx, sy) = 
   let result = createFlatHexagonGraphics()
   result.x <- sx
   result.y <- sy
-  result.zIndex <- 100.
-  app.stage.addChild result
+  parent.addChild result
 
-
-// [for j in 0 .. 10 -> [ for i in 1..10 -> 
-//                                           let x,y = {q=i;r=j}.ToTwoDCoord
-//                                           hexAt x y Hex.SCALE]]
-
-
-let mouseoverHex = hexAt (0.,0.)
-
-mouseoverHex.visible <- true
 
 let gridGraphics = CreateLineSegmentHexGrid
+let HexAtOnGrid = gridGraphics |> hexAt
 
-//gridGraphics.x <- 20.
-//gridGraphics.y <- 20.
- 
+let hexAtAxial (parent : Fable.Pixi.PIXI.Container) location =
+  hexAt parent (location |> axialCoordToPixel)
+let hexAtAxialOnGrid = gridGraphics |> hexAtAxial
+
+
+gridGraphics.x <- 20.
+gridGraphics.y <- 20.
+gridGraphics.zIndex <- -1.
+
 app.stage.addChild gridGraphics |> ignore
+
+let mouseoverHex =  HexAtOnGrid (0.,0.)
 
 let style = PIXI.TextStyle.Create( stroke = (Fable.Core.U2.Case1 "ffffff")) // gradient
 
@@ -42,15 +43,14 @@ basicText |> app.stage.addChild |> ignore
 
 let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   let point = e.data.``global``
-  let localx = point.x - grid.x
-  let localy = point.y - grid.y
-
+  let localPos = e.data.getLocalPosition grid
+  //printfn "%A" (ToCoordinateString (PixiPunkt localPos))
   let mutable text = ToCoordinateString (PixiPunkt point)
-  let x = localx
-  let y = localy
+  let x = localPos.x
+  let y = localPos.y
   Tuple (x,y) |> ToCoordinateString |> fun x -> text <- text + x 
 
-  let ax = Hex.twoDCoordToAxial localx localy
+  let ax = Hex.twoDCoordToAxial x y
   let hex2dCoord = axialCoordToPixel ax
   
   Tuple hex2dCoord |> ToCoordinateString |> fun x -> text <- text + x 
@@ -58,33 +58,32 @@ let onMouseMoveHexgrid (grid : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEve
   mouseoverHex.y <- snd hex2dCoord
 
   text <- text + (sprintf "  %i,%i" ax.q ax.r)
-  
-  // text <- text + (sprintf "  %i-%i" ax.cx ax.cy )
-  printfn "%A" e.data.target 
 
   basicText.text <- text
 
 gridGraphics.interactive <- true
 gridGraphics.on( InteractionEventTypes.ofInteractionPointerEvents InteractionPointerEvents.Pointermove, onMouseMoveHexgrid gridGraphics) |> ignore
 
-let origo =  axialCoord 13 1 |> axialCoordToPixel
-let addOrigo = (addTuple origo)
-printfn "%A" (flatHexCircleGrid 1)
+let location =  axialCoord 13 -1
 
 let positions = 
-  flatHexCircleGrid 3
-  |> List.map (axialCoordToPixel >> addOrigo)
+  flatHexCircleGridAt 3 location
+    |> List.map axialCoordToPixel
 
 positions
-|> List.map hexAt
+|> List.map HexAtOnGrid
 |> ignore
 
 positions
 |> List.map (fun (x,y) -> Tuple (x,y) |> ToCoordinateString) 
-|> List.map (fun s -> printfn "%s" s)
 |> ignore
-// let update(_) = 
-//   hex.rotation <- hex.rotation + 0.01
-//   None
 
-//app.ticker.add update |> ignore
+let pivot = (TupleToPixiPoint (gridGraphics.width / 2., gridGraphics.height/2.))
+gridGraphics.pivot <- pivot
+gridGraphics.position <- pivot
+printfn "%s" (ToCoordinateString (PixiPunkt pivot))
+let update(_) = 
+  gridGraphics.rotation <- gridGraphics.rotation + 0.005
+  None
+
+app.ticker.add update |> ignore

@@ -68,6 +68,12 @@ let twoDCoordToAxial x y =
     let r = (-1./3. * x  +  SQRT3/3. * y) / SCALE
     axialCoordcubeRound {q = q; r = r}
 
+let inline cubeAdd i j =
+    {
+        a=i.a+j.a
+        b=i.b+j.c
+        c=i.c+j.c
+    }
 
 module Cube =
     let Origo =  { a = 0; b = 0; c =  0 }
@@ -175,14 +181,15 @@ let flatHexGridCoordinates sizex sizey size =
     [for j in 1 .. sizex -> [ for i in 1..sizey -> flatHexInRectangleCoordinates j i]]
     |> List.concat
 
-let flatHexCircleGrid radius = 
+
+let flatHexCircleGridAt radius location = 
     // var results = []
     // for each -N ≤ x ≤ +N:
     //     for each max(-N, -x-N) ≤ y ≤ min(+N, -x+N):
     //         var z = -x-y
     //         results.append(cube_add(center, Cube(x, y, z)))
     let range = [-radius..radius]
-    
+    let cubeLocation = axialCoordToCube location
     range |> List.collect (fun x -> 
         let lower = max -(radius) -(x+radius)
         let upper = min radius (radius-x)
@@ -191,5 +198,7 @@ let flatHexCircleGrid radius =
         let result = [ for y in lower..upper -> { a=x;b=y;c= -(x+y)} ]
         // printfn "%A" result
         result
-    ) |> List.map cubeCoordToAxial
- 
+    ) |> List.map ((cubeAdd cubeLocation) >> cubeCoordToAxial)
+
+let flatHexCircleGrid radius =
+    flatHexCircleGridAt radius Axial.Origo
