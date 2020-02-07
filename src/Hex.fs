@@ -69,15 +69,24 @@ let twoDCoordToAxial x y =
     axialCoordcubeRound {q = q; r = r}
 
 
+module Cube =
+    let Origo =  { a = 0; b = 0; c =  0 }
+    let Up = { a = 0; b = -1; c =  1 }
+    let UpRight = { a = 1; b = 0; c =  1 }
+    let DownRight = { a = 1; b = 1; c =  0 }
+    let Down = { a = 0; b = 1; c =  -1 }
+    let DownLeft = { a = -1; b = 0; c =  -1 }
+    let UpLeft = { a = -1; b = -1; c =  0 }
 
-let ORIGO =  { a = 0; b = 0; c =  0 }
+module Axial =
+    let Origo =  { q = 0; r = 0}
+    let Up = { q = 0; r = -1}
+    let UpRight = { q = 1; r = -1}
+    let DownRight = { q = 1; r = 0}
+    let Down = { q = 0; r = 1}
+    let DownLeft = { q = -1; r = 1}
+    let UpLeft = { q = -1; r = 0}
 
-let UP = { a = 0; b = -1; c =  1 }
-let UP_RIGHT = { a = 1; b = 0; c =  1 }
-let DOWN_RIGHT = { a = 1; b = 1; c =  0 }
-let DOWN = { a = 0; b = 1; c =  -1 }
-let DOWN_LEFT = { a = -1; b = 0; c =  -1 }
-let UP_LEFT = { a = -1; b = -1; c =  0 }
 
 let hexVectorValid hv =
     0 = hv.a + hv.b + hv.c
