@@ -1,7 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "test": "dotnet run --project ./src/Tests/App.Tests.fsproj",
+    "watchtest": "dotnet watch --project ./src/Tests/App.Tests.fsproj run"
   },
   "dependencies": {
     "@babel/core": "^7.5.5",

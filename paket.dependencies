@@ -8,5 +8,10 @@ nuget Fable.Browser.Dom
 nuget Fable.Browser.Svg
 nuget Thoth.Json
 
+nuget Expecto
+nuget Expecto.BenchmarkDotNet
+nuget Expecto.FsCheck
+nuget Expecto.Hopac
+
 
 github noresjo/fable-pixi src/Fable.Pixi.fs

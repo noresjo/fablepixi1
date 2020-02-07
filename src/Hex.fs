@@ -188,7 +188,7 @@ let flatHexCircleGrid radius =
         let upper = min radius (radius-x)
 
         // printfn "x %i lower %i upper %i" x lower upper
-        let result = [ for y in lower..upper -> { a=x;b=y;c= 0-(x+y)} ]
+        let result = [ for y in lower..upper -> { a=x;b=y;c= -(x+y)} ]
         // printfn "%A" result
         result
     ) |> List.map cubeCoordToAxial
