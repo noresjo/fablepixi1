@@ -49,3 +49,11 @@ let style2 = jsOptions< PIXI.TextStyle>(fun x ->
       x.fill <- Fable.Core.U6.Case3 Constants.TextColor
       x.fontSize <- Fable.Core.U2.Case1 12.
   )
+
+let centerPivot (displayObject : PIXI.DisplayObject) =
+  let bounds = displayObject.getBounds()
+  displayObject.pivot <- PIXI.Point.Create(
+    bounds.x/2.,
+    bounds.y/2.)
+
+

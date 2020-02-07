@@ -3,6 +3,7 @@ module PixiHex
 open Hex
 open PixiHal
 open Fable.Pixi
+open Fable.Core
 
 let rows = Constants.GridRows
 let columns = Constants.GridColumns
@@ -63,11 +64,13 @@ let CreateLineSegmentHexGrid graphics =
 
   graphics
 
-let CreateBordBorder (graphics : PIXI.Graphics) =
+let drawRect (graphics : PIXI.Graphics) rect =
   graphics
     .lineStyle(color = Constants.BoardBorderColor, width = 1.0, alpha = Constants.GridAlpha)
-    .drawRect(boardRectangle.x, boardRectangle.y, boardRectangle.width, boardRectangle.height)
+    .drawShape(U5.Case4 rect)
 
+let CreateBoardBorder (graphics : PIXI.Graphics) =
+  drawRect graphics boardRectangle
 
 let hexAt (parent : Fable.Pixi.PIXI.Container) (sx, sy) = 
   let result = createFlatHexagonGraphics()

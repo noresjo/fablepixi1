@@ -42,6 +42,9 @@ type AxialCoord<'T> =
 let axialCoord q r =
     {q=q;r=r}
 
+let axialAdd i j =
+    {q=i.q+j.q;r=i.r+j.r}
+
 type FloatAxialCoord = AxialCoord<float>
 
 let axialCoordToPixel hex =         
