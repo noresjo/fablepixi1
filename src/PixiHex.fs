@@ -4,6 +4,25 @@ open Hex
 open PixiHal
 open Fable.Pixi
 
+let rows = Constants.GridRows
+let columns = Constants.GridColumns
+let even = (float (columns) % 2.)
+let oddColumns = float (columns /2) + even
+let evenColumns = float (columns / 2) 
+let flatBoardHeight = (float rows + 0.5) * Hex.CurrentGridMetris.Height 
+let flatBoardWidth = 
+    CurrentGridMetris.Width * oddColumns +
+    CurrentGridMetris.HalfWidth * 1. * evenColumns +
+    CurrentGridMetris.HalfWidth * 0.5 * (1. - even)
+
+
+let boardRectangle =
+  PIXI.Rectangle.Create(
+    CurrentGridMetris.HalfWidth/2.,
+    -CurrentGridMetris.HalfHeight,
+    flatBoardWidth,
+    flatBoardHeight
+  )
 
 let createFlatHexagonGraphics size =
 
@@ -16,36 +35,21 @@ let createFlatHexagonGraphics size =
     .lineStyle(color = Constants.HexagonColor, width = 1., alpha = 1.)
     .drawPolygon(Fable.Core.U3.Case2 castHex)
 
-let CreateLineSegmentHexGrid  =
+
+let CreateHexBoard =
   let graphics = PIXI.Graphics.Create()
-  let rows = Constants.GridRows
-  let columns = Constants.GridColumns
-  let gridHeight = (float rows + 0.5) * Hex.CurrentGridMetris.Height 
-
-  let even = (float (columns) % 2.)
-  let oddColumns = float (columns /2) + even
-  let evenColumns = float (columns / 2) 
-  
-  let gridWidth = 
-    CurrentGridMetris.Width * oddColumns +
-    CurrentGridMetris.HalfWidth * 1. * evenColumns +
-    CurrentGridMetris.HalfWidth * 0.5 * (1. - even)
  
-  let rectangle =
-    PIXI.Rectangle.Create(
-      0.,
-      0.,
-      gridWidth,
-      gridHeight
-    )
-
   graphics
-//    .beginFill(Constants.GridBackground)
-    .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
-//    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
-//    .endFill()
+    .beginFill(Constants.BoardBackground)
+    .lineStyle(color = Constants.BoardBorderColor, width = 1.0, alpha = Constants.GridAlpha)
+    .drawRect(boardRectangle.x, boardRectangle.y, boardRectangle.width, boardRectangle.height)
+    .endFill()
     .lineStyle(color = Constants.GridColor, width = 1.0, alpha = Constants.GridAlpha)
-    .hitArea <- Fable.Core.U5.Case1 rectangle
+    .hitArea <- Fable.Core.U5.Case1 boardRectangle
+  
+  graphics
+
+let CreateLineSegmentHexGrid graphics =
   let lines = 
     Hex.flatHexGridCoordinates columns rows (int Hex.SCALE)
     |> List.collect (fun (hexx,hexy) -> 
@@ -58,5 +62,18 @@ let CreateLineSegmentHexGrid  =
   |> ignore
 
   graphics
-//    .lineStyle(color = Constants.GridBorderColor, width = 1.0, alpha = Constants.GridAlpha)
-//    .drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+
+let CreateBordBorder (graphics : PIXI.Graphics) =
+  graphics
+    .lineStyle(color = Constants.BoardBorderColor, width = 1.0, alpha = Constants.GridAlpha)
+    .drawRect(boardRectangle.x, boardRectangle.y, boardRectangle.width, boardRectangle.height)
+
+
+let hexAt (parent : Fable.Pixi.PIXI.Container) (sx, sy) = 
+  let result = createFlatHexagonGraphics()
+  result.x <- sx
+  result.y <- sy
+  parent.addChild result
+
+let hexAtAxial (parent : Fable.Pixi.PIXI.Container) location =
+  hexAt parent (location |> axialCoordToPixel)

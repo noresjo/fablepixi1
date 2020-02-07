@@ -8,8 +8,8 @@ let PIXI = Fable.Pixi.PIXI.pixi
 
 let Constants = {|
   Background = (float 0x193549)
-  GridBorderColor = (float 0x04080a)
-  GridBackground = (float 0x0050A4)
+  BoardBorderColor = (float 0x04080a)
+  BoardBackground = (float 0x0050A4)
   GridAlpha = 1.
   TextColor = (float 0xc6ff00)
   HexagonColor = (float 0xff00c6)
