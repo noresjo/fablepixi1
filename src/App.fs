@@ -48,8 +48,11 @@ let onMouseMove (board : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   let ax = Hex.twoDCoordToAxial x y
   let pixelCoords = ax |> axialCoordToPixel
   text <- text + (sprintf "  %i,%i" ax.q ax.r)
-  brickShape.x <- fst pixelCoords
-  brickShape.y <- snd pixelCoords
+  
+  snapTo brickShape (fst pixelCoords) (snd pixelCoords) |> ignore
+  
+  // brickShape.x <- fst pixelCoords
+  // brickShape.y <- snd pixelCoords
   
   statusText.text <- text
 
@@ -68,16 +71,3 @@ board.interactive <- true
 board.on( InteractionEventTypes.ofInteractionPointerEvents InteractionPointerEvents.Pointermove, onMouseMove board) |> ignore
 board.on( InteractionEventTypes.ofInteractionPointerEvents InteractionPointerEvents.Pointerup, onMouseUpBoard board) |> ignore
 
-
-open Fable.Core.JsInterop
-// let test : PixiEase.PIXI.EaseParams = !!{| x = 60; y = 40 |}
-// let test2 : PixiEase.PIXI.AddOptions = !!{|duration = 1000 |}
-// ease.add(square, { x: 20 }, { duration: 200, ease: 'easeInOutSine' })
-
-PixiEase.PIXI.ease.add(board, !!{| x = 60.; y = 40. |}, !!{|duration = 10. |}) |> ignore
-PixiEase.PIXI.ease.add(board, !!{| x = 60.; y = 40. |}, !!{|duration = 1000. |}) |> ignore
-// let update(_) = 
-//   board.rotation <- board.rotation + 0.0005
-//   None
-
-// app.ticker.add update |> ignore

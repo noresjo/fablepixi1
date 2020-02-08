@@ -8,10 +8,10 @@
       <Paket>True</Paket>
       <Link>Fable.Pixi.fs</Link>
     </Compile>
+    <Compile Include="pixi-ease.fs" />
     <Compile Include="Hex.fs" />
     <Compile Include="PixiHal.fs" />
     <Compile Include="PixiHex.fs" />
-    <Compile Include="pixi-ease.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />

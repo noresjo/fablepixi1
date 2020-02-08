@@ -1,6 +1,7 @@
 module PixiHal
 
 open Hex
+open PixiEase
 open Fable.Pixi
 open Fable.Core.JsInterop
 
@@ -39,7 +40,7 @@ let DrawLineSegmentOnGrapics (graphics : PIXI.Graphics) (x1,y1) (x2,y2) =
 
 let createApplication =
   let options  = jsOptions<PIXI.ApplicationStaticOptions>(fun x ->
-      x.antialias <- Some(true)
+      x.antialias <- Some(false)
       x.backgroundColor <-Some(Constants.Background)
       )
 
@@ -57,3 +58,47 @@ let centerPivot (displayObject : PIXI.DisplayObject) =
     bounds.y/2.)
 
 
+
+open Fable.Core.JsInterop
+
+
+// let inline sendToJs (opts: PixiEase.PIXI.AddOption list) =
+// keyValueList Fable.Core.CaseRules.LowerFirst opts
+    
+// let test : PixiEase.PIXI.EaseParams = !!{| x = 60; y = 40 |}
+// let test2 : PixiEase.PIXI.AddOptions = !!{|duration = 1000 |}
+// ease.add(square, { x: 20 }, { duration: 200, ease: 'easeInOutSine' })
+
+let snapEaseAddOptions = 
+  jsOptions<PixiEase.PIXI.AddOptions> (fun x ->
+//    x.reverse <- Some true
+    x.duration <- Some 100.
+//    x.repeat <- Some (Fable.Core.U2.Case1 true)
+    x.ease <- Some "easeOutSine" )
+
+let snapEaseParams x y = 
+  jsOptions<PixiEase.PIXI.EaseParams> (fun a ->
+//    x.reverse <- Some true
+    a.x <- Some x
+//    x.repeat <- Some (Fable.Core.U2.Case1 true)
+    a.y <- Some y )
+
+let snapTo displayObject x y =
+  PixiEase.PIXI.ease.add(displayObject, (snapEaseParams x y), snapEaseAddOptions) |> ignore
+  displayObject
+
+// PixiEase.PIXI.ease.add(board,
+//   !!{| 
+//     x = 100.
+//     y = 40. 
+//   |},
+// |> ignore
+
+// let foo = jsOptions<PixiEase.PIXI.AddOptions>
+
+
+// let update(_) = 
+//   board.rotation <- board.rotation + 0.0005
+//   None
+
+// app.ticker.add update |> ignore
