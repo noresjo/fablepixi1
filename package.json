@@ -9,6 +9,7 @@
     "@babel/core": "^7.5.5",
     "fable-compiler": "^2.3.19",
     "fable-loader": "^2.1.8",
+    "pixi-ease": "^2.4.2",
     "pixi.js": "^5.2.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.6",
