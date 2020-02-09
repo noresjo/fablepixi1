@@ -3,7 +3,7 @@
 module Hex
 open System
 
-let SCALE = 20.
+let SCALE = 30.
 let SQRT3 = sqrt(3.)
 
 type CubeCoord<'T> = 
@@ -158,7 +158,6 @@ let distancePointToLineSegment p1 lp1 lp2 =
         let b = c1 / c2
         let pb = (fst p1 + b*fst v, snd p1 + b*snd v)
         distance p1 pb
-
 
 let flatHexVertex (x,y) size i =
     let angleDegrees = 60 * i

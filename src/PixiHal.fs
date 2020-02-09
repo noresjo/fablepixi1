@@ -40,7 +40,7 @@ let DrawLineSegmentOnGrapics (graphics : PIXI.Graphics) (x1,y1) (x2,y2) =
 
 let createApplication =
   let options  = jsOptions<PIXI.ApplicationStaticOptions>(fun x ->
-      x.antialias <- Some(false)
+      x.antialias <- Some(true)
       x.backgroundColor <-Some(Constants.Background)
       )
 

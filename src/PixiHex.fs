@@ -34,8 +34,9 @@ let createFlatHexagonGraphics size =
   PIXI.Graphics
     .Create()
     .lineStyle(color = Constants.HexagonColor, width = 1., alpha = 1.)
+    .beginFill(color = float 0x00ff00)
     .drawPolygon(Fable.Core.U3.Case2 castHex)
-
+    .endFill()
 
 let CreateHexBoard =
   let graphics = PIXI.Graphics.Create()
@@ -76,7 +77,17 @@ let hexAt (parent : Fable.Pixi.PIXI.Container) (sx, sy) =
   let result = createFlatHexagonGraphics()
   result.x <- sx
   result.y <- sy
-  parent.addChild result
+  parent.addChild result |> ignore
+  result
 
 let hexAtAxial (parent : Fable.Pixi.PIXI.Container) location =
   hexAt parent (location |> axialCoordToPixel)
+
+let axialCordsOfRectangle rows columns =
+  Hex.flatHexGridCoordinates columns rows (int Hex.SCALE)
+  |> List.map (fun (x,y) -> Hex.twoDCoordToAxial x y)
+
+let BoardHexes = axialCordsOfRectangle Constants.GridRows Constants.GridColumns
+ 
+let onBoard ax =
+  List.contains ax BoardHexes 
