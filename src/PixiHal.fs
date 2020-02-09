@@ -13,7 +13,8 @@ let Constants = {|
   BoardBackground = (float 0x0050A4)
   GridAlpha = 1.
   TextColor = (float 0xc6ff00)
-  HexagonColor = (float 0xff00c6)
+  HexagonLineColor = (float 0x04080a)
+  HexagonFillColor = (float 0x0070c4)
   GridColor = (float 0x00c6ff)
   GridRows = 15
   GridColumns = 25
@@ -72,9 +73,9 @@ open Fable.Core.JsInterop
 let snapEaseAddOptions = 
   jsOptions<PixiEase.PIXI.AddOptions> (fun x ->
 //    x.reverse <- Some true
-    x.duration <- Some 100.
+    x.duration <- Some 300.
 //    x.repeat <- Some (Fable.Core.U2.Case1 true)
-    x.ease <- Some "easeOutSine" )
+    x.ease <- Some "easeOutCirc" )
 
 let snapEaseParams x y = 
   jsOptions<PixiEase.PIXI.EaseParams> (fun a ->

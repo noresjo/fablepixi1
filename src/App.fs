@@ -9,7 +9,7 @@ open Hex
 let app = createApplication
 document.body.appendChild app.view |> ignore
 app.stage.sortableChildren <- true 
-
+PIXI
 let board = CreateHexBoard |> CreateBoardBorder
 let HexAtOnBoard = board |> hexAt
 let hexAtAxialOnBoard = board |> hexAtAxial
@@ -17,6 +17,7 @@ let hexAtAxialOnBoard = board |> hexAtAxial
 board.x <- 20.
 board.y <- 40.
 board.zIndex <- -1.
+board.sortableChildren <-true
 
 app.stage.addChild board |> ignore
 
@@ -28,9 +29,10 @@ statusText |> app.stage.addChild |> ignore
 let brickShapeLocations = 
   [Axial.Origo; Axial.Down; Axial.Up; Axial.DownLeft; Axial. UpRight ]
 
-let mutable brickShape = PIXI.Graphics.Create()
+let mutable brickShape = PIXI.Container.Create()
 let hexesInShape = brickShapeLocations |> List.map (hexAtAxial brickShape) 
 //brickShape.cacheAsBitmap <- true
+brickShape.zIndex <- 4.
 brickShape |> board.addChild |> ignore
 
 
@@ -48,12 +50,11 @@ let onMouseMove (board : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   
   if not (List.forall onBoard (brickShapeLocations |> List.map (axialAdd ax))) then
     printfn "%i" brickShape.children.Count
-    hexesInShape |> List.map (fun x -> x.tint <- float 0xff0000) |> ignore
+    hexesInShape |> List.map (fun x -> x.tint <- float 0xffff44) |> ignore
     printfn "%i" hexesInShape.Length
   else
     hexesInShape |> List.map (fun x -> x.tint <- float 0xffffff) |> ignore
-  
- 
+
 
   snapTo brickShape (fst pixelCoords) (snd pixelCoords) |> ignore
   statusText.text <- text

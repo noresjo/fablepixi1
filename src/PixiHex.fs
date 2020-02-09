@@ -33,8 +33,8 @@ let createFlatHexagonGraphics size =
   
   PIXI.Graphics
     .Create()
-    .lineStyle(color = Constants.HexagonColor, width = 1., alpha = 1.)
-    .beginFill(color = float 0x00ff00)
+    .lineStyle(color = Constants.HexagonLineColor, width = 1., alpha = 1.)
+    .beginFill(color = Constants.HexagonFillColor)
     .drawPolygon(Fable.Core.U3.Case2 castHex)
     .endFill()
 

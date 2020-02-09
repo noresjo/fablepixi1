@@ -3,7 +3,7 @@
 module Hex
 open System
 
-let SCALE = 30.
+let SCALE = 20.
 let SQRT3 = sqrt(3.)
 
 type CubeCoord<'T> = 
