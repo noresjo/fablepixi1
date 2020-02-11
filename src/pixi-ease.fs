@@ -2,6 +2,7 @@
 module rec PixiEase
 open Fable.Core
 open Fable.Pixi
+open Fable.Core.JsInterop
 
 module PIXI =
     type EventEmitter = Fable.Pixi.PIXI.Utils.EventEmitter
@@ -50,21 +51,12 @@ module PIXI =
         abstract wait: float option with get, set
         abstract removeExisting: bool option with get, set
 
-    type AddOption =
-        | [<CompiledName("duration")>] Duration of float
-        | [<CompiledName("ease")>] Ease of string
-        | [<CompiledName("repeat")>] RepeatOn of bool
-        | [<CompiledName("repeat")>] Repeat of float
-        | [<CompiledName("reverse")>] Reverse of bool
-        | [<CompiledName("wait")>] Wait of float
-        | [<CompiledName("removeExisting")>] RemoveExisting of bool
-
     type [<AllowNullLiteral>] Ease =
         inherit EventEmitter
         abstract duration: float with get, set
         abstract ease: string with get, set
         abstract destroy: unit -> unit
-        abstract add: element: PIXI.DisplayObject * ``params``: EaseParams * options: AddOptions -> U2<EaseDisplayObject, ResizeArray<EaseDisplayObject>>
+        abstract add: element: PIXI.DisplayObject * ``params``: U2<EaseParams, obj> * options: U3<AddOptions,AddOptions, obj> -> U2<EaseDisplayObject, ResizeArray<EaseDisplayObject>>
         abstract removeAllEases: element: PIXI.DisplayObject -> unit
         abstract removeEase: element: PIXI.DisplayObject * param: U2<string, ResizeArray<string>> -> unit
         abstract removeAll: force: bool -> unit
@@ -84,3 +76,41 @@ module PIXI =
 
     type [<AllowNullLiteral>] EaseDisplayObjectStatic =
         [<Emit "new $0($1...)">] abstract Create: element: PIXI.DisplayObject * ease: Ease -> EaseDisplayObject
+
+
+type AddOption =
+    | [<CompiledName("duration")>] Duration of float
+    | [<CompiledName("ease")>] Ease of string
+    | [<CompiledName("repeat")>] RepeatOn of bool
+    | [<CompiledName("repeat")>] Repeat of float
+    | [<CompiledName("reverse")>] Reverse of bool
+    | [<CompiledName("wait")>] Wait of float
+    | [<CompiledName("removeExisting")>] RemoveExisting of bool
+
+
+type EaseParam =
+    | X of float
+    | Y of float 
+    | Position of PIXI.Point
+    | Width of float
+    | Height of float
+    | Scale of float
+    | ScaleX of float
+    | ScaleY of float
+    | Alpha of float
+    | Rotation of float
+    | Face of PIXI.Point
+    | Skew of float
+    | SkewX of float
+    | SkewY of float
+    | Tint of float
+    | Blend of float
+    | Shake of float
+
+
+let inline objBuilder<'A> (opts: 'A list) =
+  keyValueList Fable.Core.CaseRules.LowerFirst opts
+    
+let ease displayObject (p : EaseParam list) (a :AddOption list) =
+  PixiEase.PIXI.ease.add(displayObject, !^(objBuilder p), !^(objBuilder a)) |> ignore
+  displayObject

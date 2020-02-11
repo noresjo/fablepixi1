@@ -14,7 +14,7 @@ let Constants = {|
   GridAlpha = 1.
   TextColor = (float 0xc6ff00)
   HexagonLineColor = (float 0x04080a)
-  HexagonFillColor = (float 0x0070c4)
+  HexagonFillColor = (float 0x93c247)
   GridColor = (float 0x00c6ff)
   GridRows = 15
   GridColumns = 25
@@ -48,8 +48,8 @@ let createApplication =
   PIXI.Application.Create(options)
 
 let style2 = jsOptions< PIXI.TextStyle>(fun x ->
-      x.fill <- Fable.Core.U6.Case3 Constants.TextColor
-      x.fontSize <- Fable.Core.U2.Case1 12.
+      x.fill <- !^ Constants.TextColor
+      x.fontSize <- !^ 12.
   )
 
 let centerPivot (displayObject : PIXI.DisplayObject) =
@@ -58,48 +58,17 @@ let centerPivot (displayObject : PIXI.DisplayObject) =
     bounds.x/2.,
     bounds.y/2.)
 
-
-
-open Fable.Core.JsInterop
-
-
-// let inline sendToJs (opts: PixiEase.PIXI.AddOption list) =
-// keyValueList Fable.Core.CaseRules.LowerFirst opts
-    
-// let test : PixiEase.PIXI.EaseParams = !!{| x = 60; y = 40 |}
-// let test2 : PixiEase.PIXI.AddOptions = !!{|duration = 1000 |}
-// ease.add(square, { x: 20 }, { duration: 200, ease: 'easeInOutSine' })
-
-let snapEaseAddOptions = 
-  jsOptions<PixiEase.PIXI.AddOptions> (fun x ->
-//    x.reverse <- Some true
-    x.duration <- Some 300.
-//    x.repeat <- Some (Fable.Core.U2.Case1 true)
-    x.ease <- Some "easeOutCirc" )
+let snapEaseAddOptions =
+  [
+    (Duration 500.)
+    (Ease "easeOutCirc")
+  ]
 
 let snapEaseParams x y = 
-  jsOptions<PixiEase.PIXI.EaseParams> (fun a ->
-//    x.reverse <- Some true
-    a.x <- Some x
-//    x.repeat <- Some (Fable.Core.U2.Case1 true)
-    a.y <- Some y )
+  [
+    X x
+    Y y
+  ]
 
 let snapTo displayObject x y =
-  PixiEase.PIXI.ease.add(displayObject, (snapEaseParams x y), snapEaseAddOptions) |> ignore
-  displayObject
-
-// PixiEase.PIXI.ease.add(board,
-//   !!{| 
-//     x = 100.
-//     y = 40. 
-//   |},
-// |> ignore
-
-// let foo = jsOptions<PixiEase.PIXI.AddOptions>
-
-
-// let update(_) = 
-//   board.rotation <- board.rotation + 0.0005
-//   None
-
-// app.ticker.add update |> ignore
+  ease displayObject (snapEaseParams x y) (snapEaseAddOptions)

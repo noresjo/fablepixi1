@@ -9,7 +9,7 @@ open Hex
 let app = createApplication
 document.body.appendChild app.view |> ignore
 app.stage.sortableChildren <- true 
-PIXI
+
 let board = CreateHexBoard |> CreateBoardBorder
 let HexAtOnBoard = board |> hexAt
 let hexAtAxialOnBoard = board |> hexAtAxial
@@ -50,7 +50,7 @@ let onMouseMove (board : Fable.Pixi.PIXI.DisplayObject) (e :InteractionEvent) =
   
   if not (List.forall onBoard (brickShapeLocations |> List.map (axialAdd ax))) then
     printfn "%i" brickShape.children.Count
-    hexesInShape |> List.map (fun x -> x.tint <- float 0xffff44) |> ignore
+    hexesInShape |> List.map (fun x -> x.tint <- float 0xff0000) |> ignore
     printfn "%i" hexesInShape.Length
   else
     hexesInShape |> List.map (fun x -> x.tint <- float 0xffffff) |> ignore

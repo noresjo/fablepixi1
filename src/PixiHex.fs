@@ -16,7 +16,6 @@ let flatBoardWidth =
     CurrentGridMetris.HalfWidth * 1. * evenColumns +
     CurrentGridMetris.HalfWidth * 0.5 * (1. - even)
 
-
 let boardRectangle =
   PIXI.Rectangle.Create(
     CurrentGridMetris.HalfWidth/2.,
