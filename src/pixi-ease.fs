@@ -7,10 +7,7 @@ open Fable.Core.JsInterop
 module PIXI =
     type EventEmitter = Fable.Pixi.PIXI.Utils.EventEmitter
     let [<Import("ease", from="pixi-ease")>] ease: Ease = jsNative
-    // import { Ease, ease } from 'pixi-ease'
-
-    // [<Import("myFunction",, from="my-module")>]
-    // import { myFunction } from "my-module"
+  
 
     type [<AllowNullLiteral>] IExports =
         abstract Ease: EaseStatic
@@ -63,6 +60,7 @@ module PIXI =
         abstract update: unit -> unit
         abstract countElements: unit -> float
         abstract countRunning: unit -> float
+
 
     type [<AllowNullLiteral>] EaseStatic =
         [<Emit "new $0($1...)">] abstract Create: options: EaseOptions -> Ease
