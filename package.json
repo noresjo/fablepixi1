@@ -12,7 +12,7 @@
     "pixi-ease": "^2.4.2",
     "pixi.js": "^5.2.0",
     "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.6",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.8.0"
   }
 }
